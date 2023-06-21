@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//Adapter dibuat untuk menampilkan data data yang akan ditampilkan secara berulang-ulang, yaitu listModelList
 public class CuacaAdapter extends RecyclerView.Adapter<CuacaViewHolder> {
     private List<ListModel> listModelList;
     private RootModel namaVariabel_rootModel;
@@ -45,11 +46,12 @@ public class CuacaAdapter extends RecyclerView.Adapter<CuacaViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CuacaViewHolder holder, int position) {
         ListModel namaVariabel_listModel = listModelList.get(position);
-        WeatherModel namaVariabel_weatherModel = namaVariabel_listModel.getWeatherModelList().get(0);
+        WeatherModel namaVariabel_weatherModel = namaVariabel_listModel.getWeatherModelList().get(0); // dibuat seperti ini karena berbentuk array dan knp get(0) karena data di weather nya dari link berisi 1 data.
         MainModel namaVariabel_mainModel = namaVariabel_listModel.getMainModel();
 
-        String suhu = formatNumber(toCelcius(namaVariabel_mainModel.getTemp_min()), "###.##") + "C - " +
-                formatNumber(toCelcius(namaVariabel_mainModel.getTemp_max()), "###.##") + "C";
+        //Simbol derajat ° bisa didapat dari app character map
+        String suhu = formatNumber(toCelcius(namaVariabel_mainModel.getTemp_min()), "###.##") + "°C - " +
+                formatNumber(toCelcius(namaVariabel_mainModel.getTemp_max()), "###.##") + "°C";
 
         switch (namaVariabel_weatherModel.getIcon()) {
             case "01d":
@@ -108,7 +110,7 @@ public class CuacaAdapter extends RecyclerView.Adapter<CuacaViewHolder> {
         Log.d("*tw*", "Waktu GMT : " + tanggalWaktuGmt_string);
 
         Date tanggalWaktuGmt = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //harus sesuai dengan data yang ada di link atau json
 
         try {
             tanggalWaktuGmt = sdf.parse(tanggalWaktuGmt_string);
@@ -116,6 +118,7 @@ public class CuacaAdapter extends RecyclerView.Adapter<CuacaViewHolder> {
             Log.d("*tw*", e.getMessage());
         }
 
+        // Calender diisini berguna untuk dari data Gmt terus ditambah 7 jam dengan fungsinya di baris ke 125 yaitu HOUR_OF_DAY
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(tanggalWaktuGmt);
@@ -124,8 +127,9 @@ public class CuacaAdapter extends RecyclerView.Adapter<CuacaViewHolder> {
         Date tanggalWaktuWib = calendar.getTime();
 
         String tanggalWaktuWib_string = sdf.format(tanggalWaktuWib);
-        tanggalWaktuWib_string = tanggalWaktuWib_string.replace("00.00", "00 WIB");
+        tanggalWaktuWib_string = tanggalWaktuWib_string.replace("00.00", "00 WIB"); //Berguna untuk menhapus detik dari data nya
 
+        //Fungsi *tw* berguna untuk memfilter data di Logcat setelah di log.d, *tw* juga bisa di ganti dengan inisial sendiri
         Log.d("*tw*", "Tanggal Waktu Indonesia Barat : " + tanggalWaktuWib_string);
         return tanggalWaktuWib_string;
     }

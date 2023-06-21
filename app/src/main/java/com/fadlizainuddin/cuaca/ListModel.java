@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+// Model digunakan ketika data dari link berupa model atau {}
+
 public class ListModel {
     @SerializedName("main")
     private MainModel mainModel;
